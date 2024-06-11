@@ -13,3 +13,5 @@ To start with:
 1. `pip install grpcio-tools`
 2. `cd <project_path>`
 3. `python -m grpc_tools.protoc --proto_path ./ --python_out ./ --pyi_out=./ --grpc_python_out=./ emp.proto`
+4. To start the server: `python server\sender.py`
+5. Modify the client accordingly as per wish and start calling RPCs: `python client/receiver.py`
