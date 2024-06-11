@@ -1,0 +1,73 @@
+/* This is the interface file, representing the 'Stub' in the RPC architecture. proto is one of the formats used in RPC communication. This declares some structure and this can be read by both client and server.
+A generator creates the language specific file and program. Here, we have protoc compiler doing the same. This generates a stub from interface file. This handles marshalling and unmarshalling. 
+RPC can use any application layer protocol for network layer transmission. GRPC uses HTTP2. 
+When signature changes, stub has to be regenerated. 
+Currently RPC is limited to inter-service communication. */
+
+syntax = "proto3";
+package employeepackage;
+
+/* A package contains multiple services. 
+Service contains all function signature of the specific independent behaviour to fulfill the service. 
+The function either expects raw text of the Employee structure. 
+When function takes no parameter, then have to pass void explicitly and define void message explicitly*/
+
+service DataManagement {
+    rpc createemployee(Employee) returns(Response);
+    rpc reademployees(void) returns(Employees);
+    rpc readconnections(void) returns(AllConnections);
+    rpc establishconnection(ConnectionRequest) returns(Response);
+    rpc updatesalary(Employee) returns(Employee);
+    rpc readstreamemployees(void) returns(stream Employee);
+}
+
+enum OptForCab {
+    NO=0;
+    YES=1;
+}
+
+message Response {
+    int32 statuscode=1;
+    string message=2;
+}
+
+/* It is structure based data storage, more efficient than xml and json */
+message Employee {
+    int32 id=1;
+    string name=2;
+    float salary=3;
+    OptForCab cab=4;
+}
+message Employees{
+    repeated Employee employees=1;
+}
+message void {}
+
+message ConnectionRequest {
+    int32 emp1_id=1;
+    int32 emp2_id=2;
+}
+message Connections {
+    repeated int32 connected_to=1;
+}
+message AllConnections {
+    map<int32, Connections> connections=1;
+}
+
+
+/* It is language agnostic/independent, has protoc named compiler to convert this proto file to the specific language representation. 
+If not protoc, then we have to create classes for wach employee and employees class as well, and provide all the functions required for it to be an object relational mapper. The power of protobuf is that we can serialize the data to binary and deserialize it back to real data. It helps us in reducing the storage space and be efficient in transfers.  */
+
+
+/* CLI commands:
+protoc --proto_path ./ --python_out ./ --pyi_out=./ --grpc_python_out=./ emp.proto
+python -m grpc_tools.protoc --proto_path ./ --python_out ./ --pyi_out=./ --grpc_python_out=./ emp.proto
+*/
+
+
+/* 
+For each service 'Foo' in protobuff file, three elements are generated:
+Stub: FooStub used by the client to connect to a gRPC service.
+Servicer: FooServicer used by the server to implement a gRPC service.
+Registration Function: add_FooServicer_to_server function used to register a servicer with a grpc.Server object
+*/
