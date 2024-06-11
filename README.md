@@ -1,5 +1,6 @@
 ## GRPC_Client_Server
-A client server communication using  GRPC Proto structure
+A client server communication using  GRPC Proto structure.
+
 The RPC calls that client can send to retrieve data from server include:
 ```proto
 rpc createemployee(Employee) returns(Response);
